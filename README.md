@@ -13,12 +13,12 @@ This repository contains the review paper and presentation slides developed for 
 The work surveys and synthesizes recent methodological advances at the intersection of causal inference and Bayesian data fusion:
 - **Baseline power priors** and proper normalization (Ibrahim & Chen, 2000; Duan et al., 2006; Neuenschwander et al., 2009).
 - **Meta-analytic predictive (MAP) priors** and robust mixtures (Schmidli et al., 2014).
-- **Pairwise reference shrinkage** for single historical controls (H = 1) and variance inflation equivalence (Röver & Friede, 2020).
+- **Pairwise reference shrinkage** for single historical controls (H = 1) and variance inflation equivalence (RÃ¶ver & Friede, 2020).
 - **Individual-level power likelihood fusion** with frugal parameterization (Lin et al., 2026; Evans & Didelez, 2024).
 
 ---
 
 ## Deliverables
-- [**Review Paper (PDF)**](Review_paper_Franceschini.pdf) — Comprehensive review and methodological synthesis.
-- [**Presentation Slides (PDF)**](Slides/slides.pdf) — 14-slide conference/seminar presentation deck.
-- [**LaTeX Source**](Slides/slides.tex) — Beamer source code and assets.
+- [**Review Paper (PDF)**](Review_paper_Franceschini.pdf) â€” Comprehensive review and methodological synthesis.
+- [**Presentation Slides (PDF)**](slides.pdf) â€” 14-slide conference/seminar presentation deck.
+- [**LaTeX Source**](slides.tex) â€” Beamer source code and assets.
