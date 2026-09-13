@@ -122,8 +122,8 @@
     \end{itemize}
 
     \vspace{0.15cm}
-    \begin{alertblock}{Objective of data fusion}
-        Borrow statistical power from large observational cohorts while preserving the internal validity of the randomized trial.
+    \begin{alertblock}{The data fusion dilemma}
+        How can we borrow statistical power from large observational cohorts while preserving the internal validity of the randomized trial?
     \end{alertblock}
 
     \vspace{0.1cm}
@@ -141,7 +141,7 @@
     For a discounting hyperparameter $a_0 \in [0, 1]$:
     \begin{equation*}
         \pi(\theta \mid D_0, a_0) \propto L(\theta \mid D_0)^{a_0} \pi_0(\theta \mid c_0), \quad
-        \pi(\theta \mid D_e, D_0, a_0) \propto L(\theta \mid D_e) \pi(\theta \mid D_0, a_0)
+        \pi(\theta \mid D_e, D_0, a_0) \propto L(\theta \mid D_e) \pi(\theta \mid D_0, a_0).
     \end{equation*}
     \end{block}
 
@@ -166,18 +166,19 @@
     \begin{block}{Proper power prior (Duan et al., 2006; Neuenschwander et al., 2009)}
     Retaining $C(a_0) = [ \int_\Theta L(\theta \mid D_0)^{a_0} \pi_0(\theta \mid c_0) d\theta ]^{-1}$ restores probability calculus:
     \begin{equation*}
-        \pi(\theta, a_0 \mid D_0) = C(a_0) L(\theta \mid D_0)^{a_0} \pi_0(\theta \mid c_0) \pi(a_0) \quad (a_0 \in A)
+        \pi(\theta, a_0 \mid D_0) = C(a_0) L(\theta \mid D_0)^{a_0} \pi_0(\theta \mid c_0) \pi(a_0), \quad (a_0 \in A).
     \end{equation*}
     \end{block}
 
     \begin{itemize}
-        \item \emph{Prevents collapse}: Without $C(a_0)$, $\pi(a_0 \mid \text{data})$ collapses to 0 even for identical datasets.
+        \item Without $C(a_0)$, $\pi(a_0 \mid \text{data})$ collapses to 0 even for identical datasets.
         \item \emph{Dynamic commensurability}:  Given $\pi(a_0 | D_e, D_0) \propto \pi(a_0)m(D_e | D_0, a_0)$, concordance pushes $a_0 \to 1$; conflict forces $a_0 \to 0$.
         \item \emph{*Multi-study}: Extends to vector weights $a_0 = (a_{01}, \dots, a_{0H})^\T$ for $H \ge 2$.
     \end{itemize}
-
+    
+    \vspace{0.20cm}
     \begin{highlightbox}
-        \textbf{\textcolor{MyRed}{\small The single-source bottleneck ($H = 1$)}}\par\vspace{2pt}
+        \textbf{\textcolor{MyRed}{\small Limitation: the single-source bottleneck ($H = 1$)}}\par\vspace{2pt}
         {\footnotesize With only one historical study ($H=1$), data cannot reliably separate between-study heterogeneity from noise: $\pi(a_0 \mid \text{data})$ remains sensitive to the chosen $\pi(a_0)$.}
     \end{highlightbox}
 \end{frame}
@@ -191,7 +192,7 @@
 
     \begin{block}{Hierarchical exchangeability model}
     \begin{equation*}
-        \theta_1, \dots, \theta_H, \theta_* \mid \mu, \tau \overset{\text{i.i.d.}}{\sim} \text{N}(\mu, \tau^2), \quad \pi(\mu, \tau) = \pi(\mu)\pi(\tau)
+        \theta_1, \dots, \theta_H, \theta_* \mid \mu, \tau \overset{\text{i.i.d.}}{\sim} \text{N}(\mu, \tau^2), \quad \pi(\mu, \tau) = \pi(\mu)\pi(\tau),
     \end{equation*}
     where $\tau \ge 0$ quantifies between-trial heterogeneity (half-\textit{t} or half-Normal).
     \end{block}
@@ -200,11 +201,11 @@
     \begin{itemize}
         \setlength{\itemsep}{0.04cm}
         \item Small values of $\tau$ reflect corss-trial concordance and facilitate borrowing;
-        \item \emph{Conjugate mixture approximation}: The empirical MCMC predictive density is approximated via EM by a $K$-component mixture ($K \in \{2, 3\}$):
+        \item \emph{Conjugate mixture approximation}: The empirical predictive density is approximated via EM by a $K$-component mixture ($K \in \{2, 3\}$):
         \begin{equation*}
-            \hat\pi_{\text{MAP}}(\psi_*) = \sum_{k=1}^K w_k \pi_c(\psi_* \mid \xi_k), \quad \sum_{k=1}^K w_k = 1, \quad w_k > 0
+            \hat\pi_{\text{MAP}}(\psi_*) = \sum_{k=1}^K w_k \pi_c(\psi_* \mid \xi_k), \quad \sum_{k=1}^K w_k = 1, \quad w_k > 0.
         \end{equation*}
-        Provides closed-form prospective updates, bypassing MCMC during trial analysis.
+        This provides closed-form prospective updates, bypassing MCMC estimation.
     \end{itemize}
 \end{frame}
 
@@ -218,7 +219,7 @@
     \begin{block}{Robust mixture prior (Schmidli et al. (2014))}
     Augment with vague conjugate component $\pi_V(\psi_*)$ weighted by $w_R \in [0.10, 0.20]$:
     \begin{equation*}
-        \hat\pi_{\text{HR}}(\psi_*) = (1 - w_R) \sum_{k=1}^K w_k \pi_c(\psi_* \mid \xi_k) + w_R \pi_V(\psi_*)
+        \hat\pi_{\text{HR}}(\psi_*) = (1 - w_R) \sum_{k=1}^K w_k \pi_c(\psi_* \mid \xi_k) + w_R \pi_V(\psi_*).
     \end{equation*}
     \end{block}
 
@@ -238,24 +239,24 @@
 %================================================
 \begin{frame}{Pairwise shrinkage for $H = 1$ (R\"over \& Friede, 2020)}
     \begin{itemize}
-    \item the MAP formulation rewuires $H \ge 3$ to reliably estimate heterogeneity $\tau$
+    \item the MAP formulation requires $H \ge 3$ to reliably estimate heterogeneity $\tau$
     \item When $H=1$, frequentist random-effects often yield $\hat\tau^2 = 0$, underestimating variance uncertainty; moreover, symmetric exchangeability around a mean $\mu$ is hard to justify when combining RCT with RWD.
     \end{itemize}
 
     \begin{block}{Asymmetric reference model ($\theta_e = \mu$)}
-    Anchors directly to the randomized trial target parameter:
+    Anchors a symmetric offset directly to the randomized trial target parameter:
     \begin{equation*}
-        \theta_e = \mu, \quad \theta_o \mid \mu, \tau \sim \text{N}(\mu, 2\tau^2), \quad  k=\sqrt{2}\tau, \quad \tau \sim \text{HN}(s)
+        \theta_e = \mu, \quad \theta_o \mid \mu, \tau \sim \text{N}(\mu, 2\tau^2), \quad \tau \sim \text{HN}(s).
     \end{equation*}
     \end{block}
 
-    Conditional on $\tau$, the shrinkage expectation for the trial parameter is:
+    Conditional on $\tau$, the shrinkage expectation for $\theta_e$ is:
     \begin{equation*}
         \E\{\theta_e \mid \hat\theta_e, \hat\theta_o, \tau\} = \frac{\sigma_e^{-2} \hat\theta_e + (\sigma_o^2 + 2\tau^2)^{-1} \hat\theta_o}{\sigma_e^{-2} + (\sigma_o^2 + 2\tau^2)^{-1}}.
     \end{equation*}
 
     \begin{itemize}
-        \item Integrates over $\pi(\tau \mid \hat\theta_e, \hat\theta_o)$, fully propagating heterogeneity uncertainty.
+        \item Integrating over $\pi(\tau \mid \hat\theta_e, \hat\theta_o)$, heterogeneity uncertainty fully propagates.
         \item As conflict increases ($\tau^2 \to \infty$), observational borrowing vanishes.
     \end{itemize}
 \end{frame}
@@ -267,7 +268,7 @@
     \begin{block}{Algebraic bridge between shrinkage and power priors}
     Equating observational shrinkage precision to power prior precision $a_0 \sigma_o^{-2}$:
     \begin{equation*}
-        a_0 \sigma_o^{-2} = \frac{1}{\sigma_o^2 + 2\tau^2} \iff a_0 = \frac{\sigma_o^2}{\sigma_o^2 + 2\tau^2} = \frac{1}{1 + 2\frac{\tau^2}{\sigma_o^2}}
+        a_0 \sigma_o^{-2} = \frac{1}{\sigma_o^2 + 2\tau^2} \iff a_0 = \frac{\sigma_o^2}{\sigma_o^2 + 2\tau^2} = \frac{1}{1 + 2\frac{\tau^2}{\sigma_o^2}}.
     \end{equation*}
     Hierarchical variance inflation by $2\tau^2$ is algebraically equivalent to power likelihood discounting (exponentiation) by $a_0 \in [0, 1]$.
     \end{block}
@@ -289,7 +290,7 @@
     \begin{block}{Joint power likelihood posterior (two-study setting)}
     With domain indicator $S_i \in \{e, o\}$ and $\eta \in [0, 1]$:
     \begin{equation*}
-        \pi(\phi \mid X_e, X_o, \eta) \propto f_e(X_e; \phi) \{ f_o(X_o; \phi) \}^\eta \pi(\phi)
+        \pi(\phi \mid X_e, X_o, \eta) \propto f_e(X_e; \phi) \{ f_o(X_o; \phi) \}^\eta \pi(\phi).
     \end{equation*}
     \end{block}
 
@@ -297,7 +298,7 @@
     \begin{itemize}
         \item $\theta \in \R^{p_\theta}$: Shared causal treatment effect contrast (parameter of interest).
         \item $\gamma \in \R^{p_\gamma}$: Trial-specific nuisance parameters.
-        \item $\psi \in \R^{p_\psi}$: Observational nuisance parameters (confounding/selection).
+        \item $\psi \in \R^{p_\psi}$: Observational nuisance parameters (confounding).
     \end{itemize}
 
     \textbf{The role of $\eta$}: Discounting rate ($\eta = 0$: trial only posterior $\pi(\phi | X_e)$; $\eta = 1$: full unpenalized pooling) that accommodates both single-arm (control) and two-arm observational data.
@@ -313,7 +314,7 @@
     \begin{block}{Frugal MSM factorisation (Evans \& Didelez, 2024)}
     Partition covariates $W = (C, Z)$ into effect modifiers $C$ and auxiliary $Z$:
     \begin{equation*}
-        f_s(y, t, w) = f_s(t, z \mid c) f_s(c) \cdot f^*_{Y(t)\mid C}(y \mid t, c; \theta) \cdot c^*_s(y, t, z \mid c; \zeta_s)
+        f_s(y, t, w) = f_s(t, z \mid c) f_s(c) \cdot f^*_{Y(t)\mid C}(y \mid t, c; \theta) \cdot c^*_s(y, t, z \mid c; \zeta_s).
     \end{equation*}
     \begin{itemize}
         \item $f^*$ models causal CATE $\tau(c)$; $\theta$ is variationally independent of nuisance $\zeta_e$;
@@ -338,12 +339,11 @@
     \begin{block}{Cross-validation on experimental trial folds (Lin et al., 2026)}
     Fit on combined sample $\{D_e^{(-k)}, D_o\}$ with power $\eta$, evaluated on held-out trial units $D_e^{(k)}$:
     \begin{equation*}
-        \widehat{\text{ELPD}}_{\text{cv}}(\eta) = \sum_{k=1}^K \sum_{i \in D_e^{(k)}} \log \int_{\R^p} f_e(X_i; \phi) \pi(\phi \mid X_e^{(-k)}, X_o, \eta) d\phi
+        \widehat{\text{ELPD}}_{\text{cv}}(\eta) = \sum_{k=1}^K \sum_{i \in D_e^{(k)}} \log \int_{\R^p} f_e(X_i; \phi) \pi(\phi \mid X_e^{(-k)}, X_o, \eta) d\phi.
     \end{equation*}
     Optimal grid tuning: $\hat\eta = \arg\max_{\eta \in \mathcal{H}} \widehat{\text{ELPD}}_{\text{cv}}(\eta)$ over a discrete grid $\mathcal{H} \subset [0, 1]$.
     \end{block}
 
-    \textbf{Preserving trial internal validity}:
     \begin{itemize}
         \setlength{\itemsep}{0.04cm}
         \item \emph{RCT benchmark}: Evaluating CV strictly on $D_e$ preserves trial validity;
@@ -357,7 +357,7 @@
 %================================================
 \begin{frame}{Asymptotic approximations, computation, inference}
     \vspace{-0.15cm}
-    \begin{block}{Bernstein--von Mises asymptotic decoupling}
+    \begin{block}{Bernstein--von Mises asymptotic approximation}
     As $n_e, n_o \to \infty$, the joint posterior converges to a Gaussian distribution:
     \begin{equation*}
         \pi(\phi \mid X_e, X_o, \eta) \mathrel{\dot{\sim}} \text{N}\left(\hat\phi_\eta, \left(n_e V_e^{-1} + \eta n_o V_o^{-1}\right)^{-1}\right)
@@ -365,13 +365,13 @@
     where $\hat\phi_\eta = (n_e V_e^{-1} + \eta n_o V_o^{-1})^{-1}(n_e V_e^{-1}\hat\phi_e + \eta n_o V_o^{-1}\hat\phi_o)$, with sandwich $V_e, V_o$.
     \end{block}
 
-    \vspace{-0.12cm}
+    \vspace{0.12cm}
     \begin{itemize}
         \setlength{\itemsep}{0.04cm}
-        \item \emph{MCMC-free}: Closed-form Gaussian density allows rapid grid search for $\hat\eta$, bypassing high-dimensional sampling over large registries.
-        \item \emph{Privacy preservation}: Participating sites can share only summary estimates and sandwich matrices $(\hat\phi_s, V_s)$ %without pooling raw patient-level data.
-        \item Given $\hat{\eta}$, the \emph{ATE} is evaluated via empirical g-computation over trial units:
+        \item \textbf{Computation:} \emph{MCMC-free}: Gaussian density allows rapid grid search for $\hat\eta$, bypassing high-dimensional sampling over large registries.
+        \item \textbf{Inference:} given $\hat{\eta}$, the \emph{ATE} is evaluated via empirical g-computation over trial units:
         $\hat\tau^{(m)} = \frac{1}{n_e} \sum_{i \in D_e} [ \E\{Y(1) \mid C_i; \theta^{(m)}\} - \E\{Y(0) \mid C_i; \theta^{(m)}\} ]$, with $\theta^{(m)} \sim{\pi(\theta|X_e,X_o, \hat{\eta})}$.
+        %\item \emph{Privacy preservation}: Participating sites can share only summary estimates and sandwich matrices $(\hat\phi_s, V_s)$ %without pooling raw patient-level data
         \item \textbf{Limitation:} Because $\hat{\eta}$ optimizes joint predictive density over all X rather than $\tau(c)$, moderate confounding may fail to trigger predictive penalties.
     \end{itemize}
     
@@ -380,8 +380,8 @@
 %================================================
 % SLIDE 13: Conclusions & Frontiers
 %================================================
-\begin{frame}{Remarks and research frontiers}
-    \vspace{0.1cm}
+\begin{frame}{Remarks}
+    \vspace{1.3cm}
     \textbf{Methodological evolution of Bayesian data fusion}:
     \begin{itemize}
         \setlength{\itemsep}{0.12cm}
@@ -390,14 +390,6 @@
         \item Combining power likelihoods with frugal parameterization unlocks granular, individual-level borrowing, protecting against observational misspecification.
     \end{itemize}
 
-    \vspace{0.25cm}
-    \textbf{What's next?}
-    \begin{itemize}
-        \setlength{\itemsep}{0.12cm}
-        \item \emph{Contrast-targeted utility}: Formulating predictive scores focused strictly on the causal contrast $\tau(c)$ to eliminate transient under-coverage.
-        \item \emph{Semiparametric copulas}: Relaxing parametric copula assumptions.
-        \item \emph{Regulatory adoption}: Establishing formal guidelines for dynamic Bayesian borrowing in Phase III rare-disease and pediatric clinical trials.
-    \end{itemize}
 \end{frame}
 
 %================================================
