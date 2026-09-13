@@ -102,32 +102,7 @@
 \end{frame}
 
 %================================================
-% SLIDE 2: Outline
-%================================================
-\begin{frame}{Presentation outline}
-    \vspace{0.4cm}
-    \begin{itemize}
-        \setlength{\itemsep}{0.35cm}
-        \item \textbf{Motivation}: the data fusion dilemma (RCTs vs. RWD)
-        \item \textbf{Foundational baseline}: power priors and normalization challenges
-        \item \textbf{Contrast-level hierarchical borrowing}:
-        \begin{itemize}
-            \item Robust meta-analytic-predictive (MAP) priors ($H \ge 3$)
-            \item Pairwise shrinkage for single historical studies ($H = 1$)
-            \item Variance inflation as power likelihood discounting
-        \end{itemize}
-        \item \textbf{Individual-level data fusion (Lin et al., 2026)}:
-        \begin{itemize}
-            \item Joint power likelihoods and frugal parameterization
-            \item Out-of-sample predictive optimization ($\text{ELPD}_{\text{cv}}$)
-            \item Asymptotics, sandwich covariance, and privacy
-        \end{itemize}
-        \item \textbf{Methodological synthesis and open frontiers}
-    \end{itemize}
-\end{frame}
-
-%================================================
-% SLIDE 3: Motivation
+% SLIDE 2: Motivation
 %================================================
 \begin{frame}{Motivation: the data fusion dilemma}
     \vspace{0.05cm}
@@ -136,27 +111,27 @@
         \setlength{\itemsep}{0.12cm}
         \item \emph{Randomised controlled trials (RCTs)}:
         \begin{itemize}
-            \item Gold standard for internal validity through design ($Y(t) \ci T \mid W, S = e$).
+            \item Gold standard for internal validity through design;
             \item Small sample sizes, high costs, restrictive criteria: limited statistical power and poor generalisability.
         \end{itemize}
         \item \emph{Observational real-world data (RWD)}:
         \begin{itemize}
-            \item Large patient cohorts, clinical registries, routine practice records.
+            \item Large patient cohorts, clinical registries, routine practice records;
             \item Vulnerable to unmeasured confounding and selection bias.
         \end{itemize}
     \end{itemize}
 
     \vspace{0.15cm}
-    \begin{alertblock}{Objective of data fusion (Bareinboim \& Pearl, 2016)}
+    \begin{alertblock}{Objective of data fusion}
         Borrow statistical power from large observational cohorts while preserving the internal validity of the randomized trial.
     \end{alertblock}
 
     \vspace{0.1cm}
-    The Bayesian paradigm offers a framework to introduce auxiliary evidence into prior distributions and adaptively discount it under data conflict.
+    The Bayesian paradigm offers a natural framework to introduce auxiliary evidence into priors and adaptively discount it under data conflict.
 \end{frame}
 
 %================================================
-% SLIDE 4: Baseline Power Prior
+% SLIDE 3: Baseline Power Prior
 %================================================
 \begin{frame}{Baseline: the power prior (Ibrahim \& Chen, 2000)}
     \vspace{0.1cm}
@@ -171,23 +146,23 @@
     \end{block}
 
     \begin{itemize}
-        \item $a_0 = 1$ corresponds to unpenalized pooling; $a_0 = 0$ excludes external data.
-        \item Disperses prior concentration around historical estimates to mitigate conflict.
+        \item $a_0 = 1$: unpenalized pooling; $a_0 = 0$ excludes external data entirely.
+        \item \textit{Precision scaling:} Disperses historical prior concentration.
     \end{itemize}
 
     \vspace{0.15cm}
-    \textbf{Core limitations}:
+    \textbf{Limitations}:
     \begin{itemize}
         \setlength{\itemsep}{0.1cm}
-        \item \emph{Fixed $a_0$}: Purely subjective elicitation; no internal commensurability check.
-        \item \emph{Random $a_0$}: Naive joint prior $\pi(\theta, a_0 \mid D_0) \propto L^{a_0} \pi_0 \pi(a_0)$ violates the likelihood principle (Duan et al., 2006).
+        \item \emph{Fixed $a_0$}: Subjective elicitation; no internal commensurability check;
+        \item \emph{Random $a_0$}: Naive joint prior $\pi(\theta, a_0 \mid D_0) \propto L^{a_0} \pi_0 \pi(a_0)$ violates the Likelihood Principle (scaling L changes posterior on $a_0$) and ignores $C(a_0)$.
     \end{itemize}
 \end{frame}
 
 %================================================
-% SLIDE 5: Modified Power Prior
+% SLIDE 4: Modified Power Prior
 %================================================
-\begin{frame}{The modified power prior and the $H=1$ setting}
+\begin{frame}{The modified power prior}
     \begin{block}{Proper power prior (Duan et al., 2006; Neuenschwander et al., 2009)}
     Retaining $C(a_0) = [ \int_\Theta L(\theta \mid D_0)^{a_0} \pi_0(\theta \mid c_0) d\theta ]^{-1}$ restores probability calculus:
     \begin{equation*}
@@ -197,37 +172,64 @@
 
     \begin{itemize}
         \item \emph{Prevents collapse}: Without $C(a_0)$, $\pi(a_0 \mid \text{data})$ collapses to 0 even for identical datasets.
-        \item \emph{Dynamic commensurability}: Concordance pushes $a_0 \to 1$; conflict forces $a_0 \to 0$.
-        \item \emph{Multi-study extension}: Assigns vector weights $a_0 = (a_{01}, \dots, a_{0H})^\T$ for $H \ge 2$.
+        \item \emph{Dynamic commensurability}:  Given $\pi(a_0 | D_e, D_0) \propto \pi(a_0)m(D_e | D_0, a_0)$, concordance pushes $a_0 \to 1$; conflict forces $a_0 \to 0$.
+        \item \emph{*Multi-study}: Extends to vector weights $a_0 = (a_{01}, \dots, a_{0H})^\T$ for $H \ge 2$.
     \end{itemize}
 
     \begin{highlightbox}
         \textbf{\textcolor{MyRed}{\small The single-source bottleneck ($H = 1$)}}\par\vspace{2pt}
-        {\footnotesize With only one historical study ($H=1$), data cannot identify cross-study heterogeneity: $\pi(a_0 \mid \text{data})$ remains sensitive to its prior.}
+        {\footnotesize With only one historical study ($H=1$), data cannot reliably separate between-study heterogeneity from noise: $\pi(a_0 \mid \text{data})$ remains sensitive to the chosen $\pi(a_0)$.}
     \end{highlightbox}
 \end{frame}
 
 %================================================
-% SLIDE 6: Robust MAP Priors
+% SLIDE 5: MAP Priors (Schmidli et al., 2014)
 %================================================
-\begin{frame}{Robust meta-analytic-predictive (MAP) priors}
-    \vspace{-0.15cm}
-    \textbf{Schmidli et al. (2014)}: Shift to hierarchical predictive borrowing for the control response parameter $\theta = g(\psi)$ across $H \ge 3$ historical studies.
+\begin{frame}{Meta-analytic-predictive (MAP) priors}
+    \vspace{-0.25cm}
+    \textbf{Schmidli et al. (2014)}: Shift to hierarchical predictive borrowing for control response $\theta = g(\psi)$ across $H \ge 3$ historical studies to downsize concurrent controls.
 
     \begin{block}{Hierarchical exchangeability model}
     \begin{equation*}
         \theta_1, \dots, \theta_H, \theta_* \mid \mu, \tau \overset{\text{i.i.d.}}{\sim} \text{N}(\mu, \tau^2), \quad \pi(\mu, \tau) = \pi(\mu)\pi(\tau)
     \end{equation*}
-    where $\tau \ge 0$ quantifies between-trial heterogeneity.
+    where $\tau \ge 0$ quantifies between-trial heterogeneity (half-\textit{t} or half-Normal).
     \end{block}
 
+    \vspace{-0.18cm}
     \begin{itemize}
-        \item \emph{Conjugate mixture}: Predictive density $\pi(\psi_* \mid \text{data}) \approx \sum_{k=1}^K w_k \pi_c(\psi_* \mid \xi_k)$ via EM algorithm provides closed-form posterior updates during trial analysis.
-        \item \emph{Robustification}: Augment mixture with a vague component $\pi_V(\psi_*)$ weighted by $w_R \in [0.10, 0.20]$ (Cromwell's rule):
+        \setlength{\itemsep}{0.04cm}
+        \item Small values of $\tau$ reflect corss-trial concordance and facilitate borrowing;
+        \item \emph{Conjugate mixture approximation}: The empirical MCMC predictive density is approximated via EM by a $K$-component mixture ($K \in \{2, 3\}$):
         \begin{equation*}
-            \hat\pi_{\text{HR}}(\psi_*) = (1 - w_R) \sum_{k=1}^K w_k \pi_c(\psi_* \mid \xi_k) + w_R \pi_V(\psi_*)
+            \hat\pi_{\text{MAP}}(\psi_*) = \sum_{k=1}^K w_k \pi_c(\psi_* \mid \xi_k), \quad \sum_{k=1}^K w_k = 1, \quad w_k > 0
         \end{equation*}
-        \item \emph{Adaptive discounting}: Under prior--data conflict $(m_k \ll m_V)$, the Bayes factor ratio drives $\tilde{w}_R \to 1$, automatically discarding external controls.
+        Provides closed-form prospective updates, bypassing MCMC during trial analysis.
+    \end{itemize}
+\end{frame}
+
+%================================================
+% SLIDE 6: Robust MAP Priors & Posterior Updating
+%================================================
+\begin{frame}{Robust MAP priors and posterior updating}
+    \vspace{-0.32cm}
+    To protect against non-exchangeability, they construct a robust mixture:
+
+    \begin{block}{Robust mixture prior (Schmidli et al. (2014))}
+    Augment with vague conjugate component $\pi_V(\psi_*)$ weighted by $w_R \in [0.10, 0.20]$:
+    \begin{equation*}
+        \hat\pi_{\text{HR}}(\psi_*) = (1 - w_R) \sum_{k=1}^K w_k \pi_c(\psi_* \mid \xi_k) + w_R \pi_V(\psi_*)
+    \end{equation*}
+    \end{block}
+
+    %\vspace{-0.18cm}
+    \textbf{Predictive likelihoods and updated weights}:
+    \begin{itemize}
+        \setlength{\itemsep}{0.03cm}
+        \item Marginal likelihoods: $m_k = \int_\Psi f(Y_* \mid \psi_*) \pi_c(\psi_* \mid \xi_k) d\psi_*, \; m_V = \int_\Psi f(Y_* \mid \psi_*) \pi_V(\psi_*) d\psi_*$.
+        \item Updated weights: $\tilde{w}_R = \frac{w_R m_V}{w_R m_V + (1 - w_R)\sum w_j m_j}, \quad \tilde{w}_k = \frac{w_k m_k}{\sum w_j m_j}$.
+        \item Posterior retains mixture form: $(1 - \tilde{w}_R)\sum \tilde{w}_k \pi_c(\psi_* \mid \xi_k, Y_*) + \tilde{w}_R \pi_V(\psi_* \mid Y_*)$.
+        \item $m_k/m_V$ acts as Bayes factor; conflict ($m_k \ll m_V$) drives $\tilde{w}_R \to 1$, automatically discounting historical controls.
     \end{itemize}
 \end{frame}
 
@@ -236,8 +238,8 @@
 %================================================
 \begin{frame}{Pairwise shrinkage for $H = 1$ (R\"over \& Friede, 2020)}
     \begin{itemize}
-        \item \emph{Pairwise synthesis} ($H=1$): Frequentist random-effects often yield $\hat\tau^2 = 0$, underestimating variance uncertainty.
-        \item Symmetric exchangeability around an artificial mean $\mu$ is hard to justify.
+    \item the MAP formulation rewuires $H \ge 3$ to reliably estimate heterogeneity $\tau$
+    \item When $H=1$, frequentist random-effects often yield $\hat\tau^2 = 0$, underestimating variance uncertainty; moreover, symmetric exchangeability around a mean $\mu$ is hard to justify when combining RCT with RWD.
     \end{itemize}
 
     \begin{block}{Asymmetric reference model ($\theta_e = \mu$)}
@@ -247,9 +249,9 @@
     \end{equation*}
     \end{block}
 
-    Conditional on $\tau$, the shrinkage expectation for the trial parameter is
+    Conditional on $\tau$, the shrinkage expectation for the trial parameter is:
     \begin{equation*}
-        \E\{\theta_e \mid \hat\theta_e, \hat\theta_o, \tau\} = \frac{\sigma_e^{-2} \hat\theta_e + (\sigma_o^2 + 2\tau^2)^{-1} \hat\theta_o}{\sigma_e^{-2} + (\sigma_o^2 + 2\tau^2)^{-1}}
+        \E\{\theta_e \mid \hat\theta_e, \hat\theta_o, \tau\} = \frac{\sigma_e^{-2} \hat\theta_e + (\sigma_o^2 + 2\tau^2)^{-1} \hat\theta_o}{\sigma_e^{-2} + (\sigma_o^2 + 2\tau^2)^{-1}}.
     \end{equation*}
 
     \begin{itemize}
@@ -262,49 +264,49 @@
 % SLIDE 8: Equivalence & Caveats
 %================================================
 \begin{frame}{Variance inflation vs. power priors and caveats}
-    \begin{block}{Analytical equivalence (R\"over \& Friede, 2020)}
+    \begin{block}{Analytical equivalence}
     Equating observational shrinkage precision to power prior precision $a_0 \sigma_o^{-2}$:
     \begin{equation*}
         a_0 \sigma_o^{-2} = \frac{1}{\sigma_o^2 + 2\tau^2} \iff a_0 = \frac{\sigma_o^2}{\sigma_o^2 + 2\tau^2} = \frac{1}{1 + 2\frac{\tau^2}{\sigma_o^2}}
     \end{equation*}
-    Hierarchical variance inflation by $2\tau^2$ is algebraically equivalent to power likelihood discounting by $a_0 \in [0, 1]$.
+    Hierarchical variance inflation by $2\tau^2$ is algebraically equivalent to power likelihood discounting (exponentiation) by $a_0 \in [0, 1]$.
     \end{block}
 
-    \textbf{Methodological caveats}:
+    \textbf{Limitations}:
     \begin{enumerate}
         \item \emph{Asymptotic normality}: Requires Gaussian summary estimates; fragile for rare-event binary outcomes.
         \item \emph{Dispersion vs. bias}: Symmetric offset $\text{N}(0, 2\tau^2)$ models random variation, not directional bias; observational data must be rigorously pre-adjusted.
-        \item \emph{Aggregate evidence}: Operates strictly on contrast summaries, lacking patient-level covariate granularity.
+        \item \emph{Aggregate evidence}: Operates strictly on contrast summaries, lacking patient-level covariate granularity and heterogeneity effect estimation.
     \end{enumerate}
 \end{frame}
 
 %================================================
 % SLIDE 9: Power Likelihoods IPD
 %================================================
-\begin{frame}{Individual-level fusion: power likelihoods}
-    \textbf{Lin et al. (2026)}: Combine experimental trial ($X_e$) and observational cohort $X_o$ at the individual participant level $X_i = (Y_i, T_i, W_i)$.
+\begin{frame}{Power likelihood approaches (Lin et al. (2026))}
+    Lin et al. (2026) combine experimental trial ($X_e$) and observational cohort ($X_o$) at the individual participant level $X_i = (Y_i, T_i, W_i)$.
 
-    \begin{block}{Joint power likelihood}
-    With domain indicator $S_i \in \{e, o\}$ and discounting rate $\eta \in [0, 1]$:
+    \begin{block}{Joint power likelihood posterior (two-study setting)}
+    With domain indicator $S_i \in \{e, o\}$ and $\eta \in [0, 1]$:
     \begin{equation*}
         \pi(\phi \mid X_e, X_o, \eta) \propto f_e(X_e; \phi) \{ f_o(X_o; \phi) \}^\eta \pi(\phi)
     \end{equation*}
     \end{block}
 
-    \textbf{Structured parameter partitioning}: $\phi = (\theta, \gamma, \psi) \in \R^p$ ($p = p_\theta + p_\gamma + p_\psi$):
+    \textit{Parameter partitioning}: \small $\phi = (\theta, \gamma, \psi) \in \R^p$, $p = p_\theta + p_\gamma + p_\psi$:
     \begin{itemize}
         \item $\theta \in \R^{p_\theta}$: Shared causal treatment effect contrast (parameter of interest).
         \item $\gamma \in \R^{p_\gamma}$: Trial-specific nuisance parameters.
         \item $\psi \in \R^{p_\psi}$: Observational nuisance parameters (confounding/selection).
     \end{itemize}
 
-    \emph{Flexibility}: Continuous discounting ($\eta = 0$: trial only; $\eta = 1$: full pooling) accommodates both single-arm (control) and two-arm observational data.
+    \textbf{The role of $\eta$}: Discounting rate ($\eta = 0$: trial only posterior $\pi(\phi | X_e)$; $\eta = 1$: full unpenalized pooling) that accommodates both single-arm (control) and two-arm observational data.
 \end{frame}
 
 %================================================
 % SLIDE 10: Frugal Parameterization
 %================================================
-\begin{frame}{Frugal parameterization and identification}
+\begin{frame}{Frugal parameterization and assumptions}
 
 %Goal: Model non-causal features without imposing restrictive assumptions that might misspecify observational nuisance and bias the causal effect θ.
 
@@ -313,56 +315,86 @@
     \begin{equation*}
         f_s(y, t, w) = f_s(t, z \mid c) f_s(c) \cdot f^*_{Y(t)\mid C}(y \mid t, c; \theta) \cdot c^*_s(y, t, z \mid c; \zeta_s)
     \end{equation*}
-    $f^*$ models causal CATE $\tau(c)$; copula $c^*_s$ absorbs domain nuisance ($\zeta_e = \gamma, \zeta_o = \psi$) without feedback onto $\theta$.
+    \begin{itemize}
+        \item $f^*$ models causal CATE $\tau(c)$; $\theta$ is variationally independent of nuisance $\zeta_e$;
+        \item the copula $c^*_s$ links the outcome to $Z | C$ without feedback onto $\theta$.
+    \end{itemize}
     \end{block}
 
-    \textbf{Causal identification pillars}:
+    \textbf{Causal assumptions}:
     \begin{enumerate}
-        \item \emph{Randomization}: Ensures trial ignorability and positivity ($Y(t) \ci T \mid W, S = e$).
-        \item \emph{Representativeness}: $\E\{Y(1) - Y(0) \mid C=c, S=e\} = \tau(c)$.
-        \item \emph{Contrast transportability}: $\E\{Y(1) - Y(0) \mid C=c, S=o\} = \tau(c)$.
-        \item \emph{Model specification}: Correct causal MSM for counterfactuals $Y(t) \mid C$.
+        \item \emph{Randomization}: Ensures trial ignorability and positivity, \small ($Y(t) \ci T \mid W, S = e$), $pr(T = 1|W,S = e) \in (0,1)$;
+        \item \emph{Representativeness}: $\E\{Y(1) - Y(0) \mid C=c, S=e\} = \tau(c)$;
+        \item \emph{Contrast transportability}: $\E\{Y(1) - Y(0) \mid C=c, S=o\} = \tau(c)$;
+        \item \emph{Model specification}: Correct model specification for counterfactual $Y(t) \mid C$.
     \end{enumerate}
 \end{frame}
 
 %================================================
-% SLIDE 11: Adaptive Tuning & Asymptotics
+% SLIDE 11: Robust Selection of eta
 %================================================
-\begin{frame}{Adaptive tuning, asymptotics, and privacy}
-    \textbf{Adaptive selection}: $\hat\eta = \arg\max_{\eta \in \mathcal{H}} \widehat{\text{ELPD}}_{\text{cv}}(\eta)$ evaluated on held-out RCT folds $D_e^{(k)}$.
-    It preserves trial internal validity: unmeasured residual confounding forces $\hat\eta \to 0$.
+\begin{frame}{Robust selection of the influence factor $\eta$}
+    \vspace{-0.25cm}
+    \begin{block}{Cross-validation on experimental trial folds (Lin et al., 2026)}
+    Fit on combined sample $\{D_e^{(-k)}, D_o\}$ with power $\eta$, evaluated on held-out trial units $D_e^{(k)}$:
+    \begin{equation*}
+        \widehat{\text{ELPD}}_{\text{cv}}(\eta) = \sum_{k=1}^K \sum_{i \in D_e^{(k)}} \log \int_{\R^p} f_e(X_i; \phi) \pi(\phi \mid X_e^{(-k)}, X_o, \eta) d\phi
+    \end{equation*}
+    Optimal grid tuning: $\hat\eta = \arg\max_{\eta \in \mathcal{H}} \widehat{\text{ELPD}}_{\text{cv}}(\eta)$ over a discrete grid $\mathcal{H} \subset [0, 1]$.
+    \end{block}
 
+    \textbf{Preserving trial internal validity}:
+    \begin{itemize}
+        \setlength{\itemsep}{0.04cm}
+        \item \emph{RCT benchmark}: Evaluating CV strictly on $D_e$ preserves trial validity;
+        \item \emph{Conflict penalty}: Residual confounding or non-transportability in $D_o$ degrades out-of-sample prediction on trial units, forcing $\hat\eta \to 0$;
+        \item \emph{Efficiency gain}: Under causal concordance, variance reduction improves predictive density on held-out trial units, yielding $\hat\eta > 0$.
+    \end{itemize}
+\end{frame}
+
+%================================================
+% SLIDE 12: Asymptotics, Computation, and Inference
+%================================================
+\begin{frame}{Asymptotic approximations, computation, inference}
+    \vspace{-0.15cm}
     \begin{block}{Bernstein--von Mises asymptotic decoupling}
     As $n_e, n_o \to \infty$, the joint posterior converges to a Gaussian distribution:
     \begin{equation*}
         \pi(\phi \mid X_e, X_o, \eta) \mathrel{\dot{\sim}} \text{N}\left(\hat\phi_\eta, \left(n_e V_e^{-1} + \eta n_o V_o^{-1}\right)^{-1}\right)
     \end{equation*}
-    with precision-weighted mean $\hat\phi_\eta = (n_e V_e^{-1} + \eta n_o V_o^{-1})^{-1}(n_e V_e^{-1}\hat\phi_e + \eta n_o V_o^{-1}\hat\phi_o)$, with sandwich $V_e, V_o$.
+    where $\hat\phi_\eta = (n_e V_e^{-1} + \eta n_o V_o^{-1})^{-1}(n_e V_e^{-1}\hat\phi_e + \eta n_o V_o^{-1}\hat\phi_o)$, with sandwich $V_e, V_o$.
     \end{block}
 
+    \vspace{-0.12cm}
     \begin{itemize}
-        \item \emph{MCMC-free optimization}: Closed-form Gaussian density allows rapid grid search.
-        \item \emph{Privacy preservation}: Participating sites share only summaries $(\hat\phi_s, V_s)$ without pooling raw individual patient data.
+        \setlength{\itemsep}{0.04cm}
+        \item \emph{MCMC-free}: Closed-form Gaussian density allows rapid grid search for $\hat\eta$, bypassing high-dimensional sampling over large registries.
+        \item \emph{Privacy preservation}: Participating sites can share only summary estimates and sandwich matrices $(\hat\phi_s, V_s)$ %without pooling raw patient-level data.
+        \item Given $\hat{\eta}$, the \emph{ATE} is evaluated via empirical g-computation over trial units:
+        $\hat\tau^{(m)} = \frac{1}{n_e} \sum_{i \in D_e} [ \E\{Y(1) \mid C_i; \theta^{(m)}\} - \E\{Y(0) \mid C_i; \theta^{(m)}\} ]$, with $\theta^{(m)} \sim{\pi(\theta|X_e,X_o, \hat{\eta})}$.
+        \item \textbf{Limitation:} Because $\hat{\eta}$ optimizes joint predictive density over all X rather than $\tau(c)$, moderate confounding may fail to trigger predictive penalties.
     \end{itemize}
-
-    %Target ATE ˆτ obtained via empirical g-computation.
+    
 \end{frame}
 
 %================================================
-% SLIDE 12: Methodological Comparison
+% SLIDE 13: Methodological Comparison
 %================================================
-\begin{frame}{Methodological synthesis across paradigms}
-    \vspace{-0.25cm}
+\begin{frame}[c]{Methodological synthesis across paradigms}
+    \vfill
     \centering
-    {\renewcommand{\arraystretch}{1.22}
-    \setlength{\tabcolsep}{5pt}
+    {\renewcommand{\arraystretch}{1.16}
+    \setlength{\tabcolsep}{4.5pt}
     \resizebox{\textwidth}{!}{%
     \begin{tabular}{lcccc}
         \toprule
         \textbf{Methodology} & \textbf{Data level} & \textbf{Cohort setting} & \textbf{Commensurability} & \textbf{Confounding protection} \\
         \midrule
+        \textbf{Power prior} & Aggregate / & Single / Multi & Fixed elicitation & Static precision \\
+        \textit{(Ibrahim \& Chen, 2000)} & Individual & $H \ge 1$ & $a_0 \in [0, 1]$ & discounting $L^{a_0}$ \\
+        \addlinespace[0.25em]
         \textbf{Modified power prior} & Aggregate / & Multi-study & Marginal likelihood & Prior-level \\
-        \textit{(Duan et al., 2006)} & IPD & $H \ge 2$ & Mode $a_0 \to 1$ & likelihood discounting \\
+        \textit{(Duan et al., 2006)} & Individual & $H \ge 2$ & Mode $a_0 \to 1$ & likelihood discounting \\
         \addlinespace[0.25em]
         \textbf{Robust MAP priors} & Summary & Multi-study & Bayes factor & Cromwell's rule \\
         \textit{(Schmidli et al., 2014)} & counts & $H \ge 3$ & $m_k / m_V \implies \tilde{w}_R \to 1$ & mixture with $\pi_V$ \\
@@ -370,34 +402,29 @@
         \textbf{Pairwise shrinkage} & Summary & Pairwise & Integrated variance $\tau$ & Pre-adjustment required \\
         \textit{(R\"over \& Friede, 2020)} & contrast & $H = 1$ & $a_0 = \frac{\sigma_o^2}{\sigma_o^2 + 2\tau^2}$ & (symmetric offset) \\
         \addlinespace[0.25em]
-        \textbf{Power likelihood + frugal} & Individual & Pairwise or multi & Out-of-sample RCT & Frugal MSM copula + \\
-        \textit{(Lin et al., 2026)} & (IPD) & $H \ge 1$ & $\text{ELPD}_{\text{cv}} \implies \hat\eta \in [0,1]$ & selective $\hat\eta \to 0$ \\
+        \textbf{Power likelihood + FP} & Individual & Pairwise or multi & Out-of-sample RCT & Frugal MSM copula + \\
+        \textit{(Lin et al., 2026)} & & $H \ge 1$ & $\text{ELPD}_{\text{cv}} \implies \hat\eta \in [0,1]$ & selective $\hat\eta \to 0$ \\
         \bottomrule
     \end{tabular}%
     }}
-
-    \vspace{0.50cm}
-    \begin{highlightbox}
-        \textbf{\textcolor{MyRed}{\footnotesize The omnibus ELPD trade-off (Lin et al., 2026)}}\par\vspace{2pt}
-        {\footnotesize Because $\hat\eta$ optimizes joint predictive density over all variables rather than isolating $\tau(c)$, moderate confounding may fail to trigger predictive penalties, causing transient under-coverage before severe bias forces $\hat\eta \to 0$.}
-    \end{highlightbox}
+    \vfill
 \end{frame}
 
 %================================================
-% SLIDE 13: Conclusions & Frontiers
+% SLIDE 14: Conclusions & Frontiers
 %================================================
-\begin{frame}{Concluding remarks and research frontiers}
+\begin{frame}{Remarks and research frontiers}
     \vspace{0.1cm}
     \textbf{Summary of methodological evolution}:
     \begin{itemize}
         \setlength{\itemsep}{0.12cm}
         \item Transition from static subjective power priors to dynamic, data-adaptive borrowing.
         \item Pairwise reference shrinkage resolves the single-historical-study ($H=1$) bottleneck for contrast summaries.
-        \item Combining power likelihoods with frugal parameterization unlocks granular, individual-level borrowing while protecting against observational misspecification.
+        \item Combining power likelihoods with frugal parameterization unlocks granular, individual-level borrowing, protecting against observational misspecification.
     \end{itemize}
 
     \vspace{0.25cm}
-    \textbf{Open research frontiers}:
+    \textbf{What's next?}
     \begin{itemize}
         \setlength{\itemsep}{0.12cm}
         \item \emph{Contrast-targeted utility}: Formulating predictive scores focused strictly on the causal contrast $\tau(c)$ to eliminate transient under-coverage.
@@ -407,16 +434,42 @@
 \end{frame}
 
 %================================================
-% SLIDE 14: Closing Slide
+% SLIDE 15: References
+%================================================
+\begin{frame}{References}
+    \setbeamerfont{itemize/enumerate body}{size=\tiny}
+    \vspace{-0.2cm}
+    \begin{itemize}
+        \tiny
+        \setlength{\itemsep}{0.06cm}
+        \item Bareinboim, E. \& Pearl, J. (2016). Causal inference and the data-fusion problem. \textit{Proc. Natl. Acad. Sci. USA}, 113(27), 7345--7352.
+        \item Dalal, S. R. \& Hall, W. J. (1983). Approximating priors by mixtures of natural conjugate priors. \textit{J. R. Statist. Soc. B}, 45(2), 278--286.
+        \item Duan, Y., Ye, K. \& Smith, E. P. (2006). Evaluating water quality using power priors to incorporate historical information. \textit{Environmetrics}, 17(1), 95--106.
+        \item Evans, R. J. \& Didelez, V. (2024). Parameterizing and simulating from causal models. \textit{J. R. Statist. Soc. B}, 86(3), 535--568.
+        \item Gelman, A. (2006). Prior distributions for variance parameters in hierarchical models. \textit{Bayesian Analysis}, 1(3), 515--533.
+        \item Ibrahim, J. G. \& Chen, M.-H. (2000). Power prior distributions for regression models. \textit{Statistical Science}, 15(1), 46--60.
+        \item Lin, X., Tarp, J. M. \& Evans, R. J. (2026). Combining experimental and observational data through a power likelihood. \textit{Biometrics}, 81(1), ujaf008.
+        \item Morita, S., Thall, P. F. \& M{\"u}ller, P. (2008). Determining the effective sample size of a parametric prior. \textit{Biometrics}, 64(2), 595--602.
+        \item Neuenschwander, B., Branson, M. \& Spiegelhalter, D. J. (2009). A note on the power prior. \textit{Statistics in Medicine}, 28(28), 3562--3566.
+        \item Pearl, J. (2009). \textit{Causality: Models, Reasoning, and Inference} (2nd ed.). Cambridge University Press.
+        \item Polson, N. G. \& Scott, J. G. (2012). On the Half-Cauchy prior for a global scale parameter. \textit{Bayesian Analysis}, 7(4), 887--902.
+        \item R\"over, C. \& Friede, T. (2020). Dynamically borrowing strength from another study through shrinkage estimation. \textit{Stat. Methods Med. Res.}, 29(1), 293--308.
+        \item Rubin, D. B. (1974). Estimating causal effects of treatments in randomized and nonrandomized studies. \textit{J. Educ. Psychol.}, 66(5), 688--701.
+        \item Schmidli, H. et al. (2014). Robust meta-analytic-predictive priors in clinical trials with historical control information. \textit{Biometrics}, 70(4), 1023--1032.
+    \end{itemize}
+\end{frame}
+
+%================================================
+% SLIDE 17: Closing Slide
 %================================================
 \begin{frame}[c]
     \FirstLastPageLayout
     \begin{center}
         {\Huge \textcolor{MyRed}{\textbf{Thank you!}}}\\[0.3cm]
-        {\large Questions and discussion}\\[0.4cm]
         \includegraphics[width=2.3cm]{qrcode_repo.png}\\[0.15cm]
         {\footnotesize \textbf{Review paper \& presentation material}}\\[0.1cm]
-        {\scriptsize \href{https://github.com/ClaudiaFran/bayesian-data-fusion-review}{\textcolor{MyRed!85!black}{\texttt{github.com/ClaudiaFran/bayesian-data-fusion-review}}}}
+        {\scriptsize \href{https://github.com/ClaudiaFran/bayesian-data-fusion-review}{\textcolor{MyRed!85!black}{\texttt{github.com/ClaudiaFran/bayesian-data-fusion-review}}}}\\[0.35cm]
+        {\tiny\textcolor{black!50}{\textit{Slides revision and \LaTeX{} layout design assisted by AI}}}
     \end{center}
 \end{frame}
 
