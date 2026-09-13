@@ -264,7 +264,7 @@
 % SLIDE 8: Equivalence & Caveats
 %================================================
 \begin{frame}{Variance inflation vs. power priors and caveats}
-    \begin{block}{Analytical equivalence}
+    \begin{block}{Algebraic bridge between shrinkage and power priors}
     Equating observational shrinkage precision to power prior precision $a_0 \sigma_o^{-2}$:
     \begin{equation*}
         a_0 \sigma_o^{-2} = \frac{1}{\sigma_o^2 + 2\tau^2} \iff a_0 = \frac{\sigma_o^2}{\sigma_o^2 + 2\tau^2} = \frac{1}{1 + 2\frac{\tau^2}{\sigma_o^2}}
@@ -378,9 +378,72 @@
 \end{frame}
 
 %================================================
+% SLIDE 13: Conclusions & Frontiers
+%================================================
+\begin{frame}{Remarks and research frontiers}
+    \vspace{0.1cm}
+    \textbf{Methodological evolution of Bayesian data fusion}:
+    \begin{itemize}
+        \setlength{\itemsep}{0.12cm}
+        \item Transition from static subjective power priors to dynamic, data-adaptive borrowing.
+        \item Pairwise reference shrinkage resolves the single-historical-study ($H=1$) bottleneck for contrast summaries.
+        \item Combining power likelihoods with frugal parameterization unlocks granular, individual-level borrowing, protecting against observational misspecification.
+    \end{itemize}
+
+    \vspace{0.25cm}
+    \textbf{What's next?}
+    \begin{itemize}
+        \setlength{\itemsep}{0.12cm}
+        \item \emph{Contrast-targeted utility}: Formulating predictive scores focused strictly on the causal contrast $\tau(c)$ to eliminate transient under-coverage.
+        \item \emph{Semiparametric copulas}: Relaxing parametric copula assumptions.
+        \item \emph{Regulatory adoption}: Establishing formal guidelines for dynamic Bayesian borrowing in Phase III rare-disease and pediatric clinical trials.
+    \end{itemize}
+\end{frame}
+
+%================================================
+% SLIDE 14: References
+%================================================
+\begin{frame}{References}
+    \setbeamerfont{itemize/enumerate body}{size=\tiny}
+    \vspace{-0.2cm}
+    \begin{itemize}
+        \tiny
+        \setlength{\itemsep}{0.06cm}
+        \item Bareinboim, E. \& Pearl, J. (2016). Causal inference and the data-fusion problem. \textit{Proc. Natl. Acad. Sci. USA}, 113(27), 7345--7352.
+        \item Dalal, S. R. \& Hall, W. J. (1983). Approximating priors by mixtures of natural conjugate priors. \textit{J. R. Statist. Soc. B}, 45(2), 278--286.
+        \item Duan, Y., Ye, K. \& Smith, E. P. (2006). Evaluating water quality using power priors to incorporate historical information. \textit{Environmetrics}, 17(1), 95--106.
+        \item Evans, R. J. \& Didelez, V. (2024). Parameterizing and simulating from causal models. \textit{J. R. Statist. Soc. B}, 86(3), 535--568.
+        \item Gelman, A. (2006). Prior distributions for variance parameters in hierarchical models. \textit{Bayesian Analysis}, 1(3), 515--533.
+        \item Ibrahim, J. G. \& Chen, M.-H. (2000). Power prior distributions for regression models. \textit{Statistical Science}, 15(1), 46--60.
+        \item Lin, X., Tarp, J. M. \& Evans, R. J. (2026). Combining experimental and observational data through a power likelihood. \textit{Biometrics}, 81(1), ujaf008.
+        \item Morita, S., Thall, P. F. \& M{\"u}ller, P. (2008). Determining the effective sample size of a parametric prior. \textit{Biometrics}, 64(2), 595--602.
+        \item Neuenschwander, B., Branson, M. \& Spiegelhalter, D. J. (2009). A note on the power prior. \textit{Statistics in Medicine}, 28(28), 3562--3566.
+        \item Pearl, J. (2009). \textit{Causality: Models, Reasoning, and Inference} (2nd ed.). Cambridge University Press.
+        \item Polson, N. G. \& Scott, J. G. (2012). On the Half-Cauchy prior for a global scale parameter. \textit{Bayesian Analysis}, 7(4), 887--902.
+        \item R\"over, C. \& Friede, T. (2020). Dynamically borrowing strength from another study through shrinkage estimation. \textit{Stat. Methods Med. Res.}, 29(1), 293--308.
+        \item Rubin, D. B. (1974). Estimating causal effects of treatments in randomized and nonrandomized studies. \textit{J. Educ. Psychol.}, 66(5), 688--701.
+        \item Schmidli, H. et al. (2014). Robust meta-analytic-predictive priors in clinical trials with historical control information. \textit{Biometrics}, 70(4), 1023--1032.
+    \end{itemize}
+\end{frame}
+
+%================================================
+% SLIDE 15: Closing Slide
+%================================================
+\begin{frame}[c]
+    \FirstLastPageLayout
+    \begin{center}
+        {\Huge \textcolor{MyRed}{\textbf{Thank you!}}}\\[0.3cm]
+        \includegraphics[width=2.3cm]{qrcode_repo.png}\\[0.15cm]
+        {\footnotesize \textbf{Review paper \& presentation material}}\\[0.1cm]
+        {\scriptsize \href{https://github.com/ClaudiaFran/bayesian-data-fusion-review}{\textcolor{MyRed!85!black}{\texttt{github.com/ClaudiaFran/bayesian-data-fusion-review}}}}\\[0.35cm]
+        {\tiny\textcolor{black!50}{\textit{Slides revision and \LaTeX{} layout design assisted by AI}}}
+    \end{center}
+\end{frame}
+
+%================================================
 % SLIDE 13: Methodological Comparison
 %================================================
-\begin{frame}[c]{Methodological synthesis across paradigms}
+\begin{frame}[c]{Supplementary material}
     \vfill
     \centering
     {\renewcommand{\arraystretch}{1.16}
@@ -408,69 +471,6 @@
     \end{tabular}%
     }}
     \vfill
-\end{frame}
-
-%================================================
-% SLIDE 14: Conclusions & Frontiers
-%================================================
-\begin{frame}{Remarks and research frontiers}
-    \vspace{0.1cm}
-    \textbf{Summary of methodological evolution}:
-    \begin{itemize}
-        \setlength{\itemsep}{0.12cm}
-        \item Transition from static subjective power priors to dynamic, data-adaptive borrowing.
-        \item Pairwise reference shrinkage resolves the single-historical-study ($H=1$) bottleneck for contrast summaries.
-        \item Combining power likelihoods with frugal parameterization unlocks granular, individual-level borrowing, protecting against observational misspecification.
-    \end{itemize}
-
-    \vspace{0.25cm}
-    \textbf{What's next?}
-    \begin{itemize}
-        \setlength{\itemsep}{0.12cm}
-        \item \emph{Contrast-targeted utility}: Formulating predictive scores focused strictly on the causal contrast $\tau(c)$ to eliminate transient under-coverage.
-        \item \emph{Semiparametric copulas}: Relaxing parametric copula assumptions.
-        \item \emph{Regulatory adoption}: Establishing formal guidelines for dynamic Bayesian borrowing in Phase III rare-disease and pediatric clinical trials.
-    \end{itemize}
-\end{frame}
-
-%================================================
-% SLIDE 15: References
-%================================================
-\begin{frame}{References}
-    \setbeamerfont{itemize/enumerate body}{size=\tiny}
-    \vspace{-0.2cm}
-    \begin{itemize}
-        \tiny
-        \setlength{\itemsep}{0.06cm}
-        \item Bareinboim, E. \& Pearl, J. (2016). Causal inference and the data-fusion problem. \textit{Proc. Natl. Acad. Sci. USA}, 113(27), 7345--7352.
-        \item Dalal, S. R. \& Hall, W. J. (1983). Approximating priors by mixtures of natural conjugate priors. \textit{J. R. Statist. Soc. B}, 45(2), 278--286.
-        \item Duan, Y., Ye, K. \& Smith, E. P. (2006). Evaluating water quality using power priors to incorporate historical information. \textit{Environmetrics}, 17(1), 95--106.
-        \item Evans, R. J. \& Didelez, V. (2024). Parameterizing and simulating from causal models. \textit{J. R. Statist. Soc. B}, 86(3), 535--568.
-        \item Gelman, A. (2006). Prior distributions for variance parameters in hierarchical models. \textit{Bayesian Analysis}, 1(3), 515--533.
-        \item Ibrahim, J. G. \& Chen, M.-H. (2000). Power prior distributions for regression models. \textit{Statistical Science}, 15(1), 46--60.
-        \item Lin, X., Tarp, J. M. \& Evans, R. J. (2026). Combining experimental and observational data through a power likelihood. \textit{Biometrics}, 81(1), ujaf008.
-        \item Morita, S., Thall, P. F. \& M{\"u}ller, P. (2008). Determining the effective sample size of a parametric prior. \textit{Biometrics}, 64(2), 595--602.
-        \item Neuenschwander, B., Branson, M. \& Spiegelhalter, D. J. (2009). A note on the power prior. \textit{Statistics in Medicine}, 28(28), 3562--3566.
-        \item Pearl, J. (2009). \textit{Causality: Models, Reasoning, and Inference} (2nd ed.). Cambridge University Press.
-        \item Polson, N. G. \& Scott, J. G. (2012). On the Half-Cauchy prior for a global scale parameter. \textit{Bayesian Analysis}, 7(4), 887--902.
-        \item R\"over, C. \& Friede, T. (2020). Dynamically borrowing strength from another study through shrinkage estimation. \textit{Stat. Methods Med. Res.}, 29(1), 293--308.
-        \item Rubin, D. B. (1974). Estimating causal effects of treatments in randomized and nonrandomized studies. \textit{J. Educ. Psychol.}, 66(5), 688--701.
-        \item Schmidli, H. et al. (2014). Robust meta-analytic-predictive priors in clinical trials with historical control information. \textit{Biometrics}, 70(4), 1023--1032.
-    \end{itemize}
-\end{frame}
-
-%================================================
-% SLIDE 17: Closing Slide
-%================================================
-\begin{frame}[c]
-    \FirstLastPageLayout
-    \begin{center}
-        {\Huge \textcolor{MyRed}{\textbf{Thank you!}}}\\[0.3cm]
-        \includegraphics[width=2.3cm]{qrcode_repo.png}\\[0.15cm]
-        {\footnotesize \textbf{Review paper \& presentation material}}\\[0.1cm]
-        {\scriptsize \href{https://github.com/ClaudiaFran/bayesian-data-fusion-review}{\textcolor{MyRed!85!black}{\texttt{github.com/ClaudiaFran/bayesian-data-fusion-review}}}}\\[0.35cm]
-        {\tiny\textcolor{black!50}{\textit{Slides revision and \LaTeX{} layout design assisted by AI}}}
-    \end{center}
 \end{frame}
 
 \end{document}
