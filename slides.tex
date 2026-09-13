@@ -243,20 +243,20 @@
     \item When $H=1$, frequentist random-effects often yield $\hat\tau^2 = 0$, underestimating variance uncertainty; moreover, symmetric exchangeability around a mean $\mu$ is hard to justify when combining RCT with RWD.
     \end{itemize}
 
-    \begin{block}{Asymmetric reference model ($\theta_e = \mu$)}
+    \begin{block}{Asymmetric reference model for $\theta_e = \mu$}
     Anchors a symmetric offset directly to the randomized trial target parameter:
     \begin{equation*}
         \theta_e = \mu, \quad \theta_o \mid \mu, \tau \sim \text{N}(\mu, 2\tau^2), \quad \tau \sim \text{HN}(s).
     \end{equation*}
     \end{block}
 
-    Conditional on $\tau$, the shrinkage expectation for $\theta_e$ is:
+    Conditional on $\tau$, the shrinkage posterior expectation for $\theta_e$ is:
     \begin{equation*}
         \E\{\theta_e \mid \hat\theta_e, \hat\theta_o, \tau\} = \frac{\sigma_e^{-2} \hat\theta_e + (\sigma_o^2 + 2\tau^2)^{-1} \hat\theta_o}{\sigma_e^{-2} + (\sigma_o^2 + 2\tau^2)^{-1}}.
     \end{equation*}
 
     \begin{itemize}
-        \item Integrating over $\pi(\tau \mid \hat\theta_e, \hat\theta_o)$, heterogeneity uncertainty fully propagates.
+        \item Observational discrepancy is captured via a zero-mean offset.
         \item As conflict increases ($\tau^2 \to \infty$), observational borrowing vanishes.
     \end{itemize}
 \end{frame}
@@ -312,42 +312,43 @@
 %Goal: Model non-causal features without imposing restrictive assumptions that might misspecify observational nuisance and bias the causal effect θ.
 
     \begin{block}{Frugal MSM factorisation (Evans \& Didelez, 2024)}
-    Partition covariates $W = (C, Z)$ into effect modifiers $C$ and auxiliary $Z$:
+    Partitioning covariates $W = (C, Z)$ into effect modifiers $C$ and auxiliary $Z$, the joint density for s is:
     \begin{equation*}
         f_s(y, t, w) = f_s(t, z \mid c) f_s(c) \cdot f^*_{Y(t)\mid C}(y \mid t, c; \theta) \cdot c^*_s(y, t, z \mid c; \zeta_s).
     \end{equation*}
-    \begin{itemize}
-        \item $f^*$ models causal CATE $\tau(c)$; $\theta$ is variationally independent of nuisance $\zeta_e$;
-        \item the copula $c^*_s$ links the outcome to $Z | C$ without feedback onto $\theta$.
-    \end{itemize}
+    - $f^*$ isolated the CATE $\tau(c)$; $\theta$ is variationally independent of nuisance $\zeta_e$;\\
+    - the conditional copula $c^*_s$ links the outcome to $Z | C$ without feedback onto $\theta$.
     \end{block}
-
-    \textbf{Causal assumptions}:
-    \begin{enumerate}
-        \item \emph{Randomization}: Ensures trial ignorability and positivity, \small ($Y(t) \ci T \mid W, S = e$), $pr(T = 1|W,S = e) \in (0,1)$;
-        \item \emph{Representativeness}: $\E\{Y(1) - Y(0) \mid C=c, S=e\} = \tau(c)$;
-        \item \emph{Contrast transportability}: $\E\{Y(1) - Y(0) \mid C=c, S=o\} = \tau(c)$;
-        \item \emph{Model specification}: Correct model specification for counterfactual $Y(t) \mid C$.
-    \end{enumerate}
+    
+    \vspace{0.6cm}
+    \textbf{Causal identification and borrowing rest on four conditions:} \emph{Randomization}, \emph{representativeness}, \emph{contrast transportability}, \emph{model specification}.
+    
+    %\textbf{Causal assumptions}:
+    %\begin{enumerate}
+    %    \item \emph{Randomization}: Ensures trial ignorability and positivity, \small ($Y(t) \ci T \mid W, S = e$), $pr(T = 1|W,S = e) \in (0,1)$;
+    %    \item \emph{Representativeness}: $\E\{Y(1) - Y(0) \mid C=c, S=e\} = \tau(c)$;
+     %   \item \emph{Contrast transportability}: $\E\{Y(1) - Y(0) \mid C=c, S=o\} = \tau(c)$;
+     %   \item \emph{Model specification}: Correct model specification for counterfactual $Y(t) \mid C$.
+    %\end{enumerate}
 \end{frame}
 
 %================================================
 % SLIDE 11: Robust Selection of eta
 %================================================
-\begin{frame}{Robust selection of the influence factor $\eta$}
+\begin{frame}{How to choose the influence factor $\eta$}
     \vspace{-0.25cm}
     \begin{block}{Cross-validation on experimental trial folds (Lin et al., 2026)}
-    Fit on combined sample $\{D_e^{(-k)}, D_o\}$ with power $\eta$, evaluated on held-out trial units $D_e^{(k)}$:
+    The model is fitted on the combined sample $\{D_e^{(-k)}, D_o\}$ with power $\eta$, evaluated on held-out trial units $D_e^{(k)}$ via expected log predictive density (ELPD):
     \begin{equation*}
         \widehat{\text{ELPD}}_{\text{cv}}(\eta) = \sum_{k=1}^K \sum_{i \in D_e^{(k)}} \log \int_{\R^p} f_e(X_i; \phi) \pi(\phi \mid X_e^{(-k)}, X_o, \eta) d\phi.
     \end{equation*}
-    Optimal grid tuning: $\hat\eta = \arg\max_{\eta \in \mathcal{H}} \widehat{\text{ELPD}}_{\text{cv}}(\eta)$ over a discrete grid $\mathcal{H} \subset [0, 1]$.
+    Optimal influence factor: $\hat\eta = \arg\max_{\eta \in \mathcal{H}} \widehat{\text{ELPD}}_{\text{cv}}(\eta)$ in a discrete grid $\mathcal{H} \subset [0, 1]$.
     \end{block}
 
     \begin{itemize}
         \setlength{\itemsep}{0.04cm}
         \item \emph{RCT benchmark}: Evaluating CV strictly on $D_e$ preserves trial validity;
-        \item \emph{Conflict penalty}: Residual confounding or non-transportability in $D_o$ degrades out-of-sample prediction on trial units, forcing $\hat\eta \to 0$;
+        \item \emph{Conflict penalty}: Residual confounding in $D_o$ degrades out-of-sample prediction on trial units, forcing $\hat\eta \to 0$;
         \item \emph{Efficiency gain}: Under causal concordance, variance reduction improves predictive density on held-out trial units, yielding $\hat\eta > 0$.
     \end{itemize}
 \end{frame}
