@@ -201,7 +201,7 @@
     \begin{itemize}
         \setlength{\itemsep}{0.04cm}
         \item Small values of $\tau$ reflect corss-trial concordance and facilitate borrowing;
-        \item \emph{Conjugate mixture approximation}: The empirical predictive density is approximated via EM by a $K$-component mixture ($K \in \{2, 3\}$):
+        \item \emph{Conjugate mixture approximation}: The empirical predictive density is approximated via EM by a $K$-component mixture of conjugate densities:
         \begin{equation*}
             \hat\pi_{\text{MAP}}(\psi_*) = \sum_{k=1}^K w_k \pi_c(\psi_* \mid \xi_k), \quad \sum_{k=1}^K w_k = 1, \quad w_k > 0.
         \end{equation*}
@@ -217,7 +217,7 @@
     To protect against non-exchangeability, they construct a robust mixture:
 
     \begin{block}{Robust mixture prior (Schmidli et al. (2014))}
-    Augment with vague conjugate component $\pi_V(\psi_*)$ weighted by $w_R \in [0.10, 0.20]$:
+    Augment the mixture with vague conjugate component $\pi_V(\psi_*)$ weighted by $w_R \in [0,1]$:
     \begin{equation*}
         \hat\pi_{\text{HR}}(\psi_*) = (1 - w_R) \sum_{k=1}^K w_k \pi_c(\psi_* \mid \xi_k) + w_R \pi_V(\psi_*).
     \end{equation*}
@@ -229,7 +229,7 @@
         \setlength{\itemsep}{0.03cm}
         \item Marginal likelihoods: $m_k = \int_\Psi f(Y_* \mid \psi_*) \pi_c(\psi_* \mid \xi_k) d\psi_*, \; m_V = \int_\Psi f(Y_* \mid \psi_*) \pi_V(\psi_*) d\psi_*$.
         \item Updated weights: $\tilde{w}_R = \frac{w_R m_V}{w_R m_V + (1 - w_R)\sum w_j m_j}, \quad \tilde{w}_k = \frac{w_k m_k}{\sum w_j m_j}$.
-        \item Posterior retains mixture form: $(1 - \tilde{w}_R)\sum \tilde{w}_k \pi_c(\psi_* \mid \xi_k, Y_*) + \tilde{w}_R \pi_V(\psi_* \mid Y_*)$.
+        \item Posterior retains conjugate mixture form: $(1 - \tilde{w}_R)\sum \tilde{w}_k \pi_c(\psi_* \mid \xi_k, Y_*) + \tilde{w}_R \pi_V(\psi_* \mid Y_*)$.
         \item $m_k/m_V$ acts as Bayes factor; conflict ($m_k \ll m_V$) drives $\tilde{w}_R \to 1$, automatically discounting historical controls.
     \end{itemize}
 \end{frame}
@@ -237,34 +237,34 @@
 %================================================
 % SLIDE 7: Pairwise Shrinkage for H=1
 %================================================
-\begin{frame}{Pairwise shrinkage for $H = 1$ (R\"over \& Friede, 2020)}
+\begin{frame}{Pairwise shrinkage model (H=1) (R\"over \& Friede, 2020)}
     \begin{itemize}
-    \item the MAP formulation requires $H \ge 3$ to reliably estimate heterogeneity $\tau$
-    \item When $H=1$, frequentist random-effects often yield $\hat\tau^2 = 0$, underestimating variance uncertainty; moreover, symmetric exchangeability around a mean $\mu$ is hard to justify when combining RCT with RWD.
+    \item \textbf{In the power prior framework with H = 1}, data cannot reliably separate between-study heterogeneity from noise. \textbf{The MAP formulation} requires $H \ge 3$ to reliably estimate heterogeneity $\tau$.
+    \item R\"over \& Friede (2020) propose a Bayesian shrinkage estimation within the normal-normal hierarchical model.
     \end{itemize}
 
     \begin{block}{Asymmetric reference model for $\theta_e = \mu$}
-    Anchors a symmetric offset directly to the randomized trial target parameter:
+    Anchors a symmetric offset directly to the randomised trial target parameter:
     \begin{equation*}
-        \theta_e = \mu, \quad \theta_o \mid \mu, \tau \sim \text{N}(\mu, 2\tau^2), \quad \tau \sim \text{HN}(s).
+        \theta_e = \mu, \quad \theta_o \mid \mu, k \sim \text{N}(\mu, k^2), \quad k =\sqrt{2}\tau \quad \tau \sim \text{HN}(s).
     \end{equation*}
     \end{block}
 
-    Conditional on $\tau$, the shrinkage posterior expectation for $\theta_e$ is:
+    Conditional on $\tau$, the posterior shrinkage expectation for $\theta_e$ is:
     \begin{equation*}
         \E\{\theta_e \mid \hat\theta_e, \hat\theta_o, \tau\} = \frac{\sigma_e^{-2} \hat\theta_e + (\sigma_o^2 + 2\tau^2)^{-1} \hat\theta_o}{\sigma_e^{-2} + (\sigma_o^2 + 2\tau^2)^{-1}}.
     \end{equation*}
 
     \begin{itemize}
         \item Observational discrepancy is captured via a zero-mean offset.
-        \item As conflict increases ($\tau^2 \to \infty$), observational borrowing vanishes.
+        \item As discrepancy increases ($\tau^2 \to \infty$), observational borrowing vanishes.
     \end{itemize}
 \end{frame}
 
 %================================================
 % SLIDE 8: Equivalence & Caveats
 %================================================
-\begin{frame}{Variance inflation vs. power priors and caveats}
+\begin{frame}{Variance inflation vs. power priors and limitations}
     \begin{block}{Algebraic bridge between shrinkage and power priors}
     Equating observational shrinkage precision to power prior precision $a_0 \sigma_o^{-2}$:
     \begin{equation*}
@@ -294,11 +294,11 @@
     \end{equation*}
     \end{block}
 
-    \textit{Parameter partitioning}: \small $\phi = (\theta, \gamma, \psi) \in \R^p$, $p = p_\theta + p_\gamma + p_\psi$:
+    \textit{Parameter partitioning}: \small $\phi = (\theta, \gamma, \psi) \in \R^p$:
     \begin{itemize}
         \item $\theta \in \R^{p_\theta}$: Shared causal treatment effect contrast (parameter of interest).
         \item $\gamma \in \R^{p_\gamma}$: Trial-specific nuisance parameters.
-        \item $\psi \in \R^{p_\psi}$: Observational nuisance parameters (confounding).
+        \item $\psi \in \R^{p_\psi}$: Observational nuisance parameters.
     \end{itemize}
 
     \textbf{The role of $\eta$}: Discounting rate ($\eta = 0$: trial only posterior $\pi(\phi | X_e)$; $\eta = 1$: full unpenalized pooling) that accommodates both single-arm (control) and two-arm observational data.
@@ -321,7 +321,7 @@
     \end{block}
     
     \vspace{0.6cm}
-    \textbf{Causal identification and borrowing rest on four conditions:} \emph{Randomization}, \emph{representativeness}, \emph{contrast transportability}, \emph{model specification}.
+    \textbf{Note:} Causal identification and borrowing rest on four conditions: \emph{Randomization}, \emph{representativeness}, \emph{contrast transportability}, \emph{model specification}.
     
     %\textbf{Causal assumptions}:
     %\begin{enumerate}
@@ -338,7 +338,7 @@
 \begin{frame}{How to choose the influence factor $\eta$}
     \vspace{-0.25cm}
     \begin{block}{Cross-validation on experimental trial folds (Lin et al., 2026)}
-    The model is fitted on the combined sample $\{D_e^{(-k)}, D_o\}$ with power $\eta$, evaluated on held-out trial units $D_e^{(k)}$ via expected log predictive density (ELPD):
+    The model is fitted on the combined sample $\{D_e^{(-k)}, D_o\}$ with power $\eta$, and the performance is evaluated on held-out trial units $D_e^{(k)}$ via expected log predictive density (ELPD):
     \begin{equation*}
         \widehat{\text{ELPD}}_{\text{cv}}(\eta) = \sum_{k=1}^K \sum_{i \in D_e^{(k)}} \log \int_{\R^p} f_e(X_i; \phi) \pi(\phi \mid X_e^{(-k)}, X_o, \eta) d\phi.
     \end{equation*}
@@ -369,7 +369,7 @@
     \vspace{0.12cm}
     \begin{itemize}
         \setlength{\itemsep}{0.04cm}
-        \item \textbf{Computation:} \emph{MCMC-free}: Gaussian density allows rapid grid search for $\hat\eta$, bypassing high-dimensional sampling over large registries.
+        \item \textbf{Computation:} \emph{MCMC-free}: Closed-form Gaussian density enables rapid grid search for $\hat\eta$, bypassing high-dimensional sampling.
         \item \textbf{Inference:} given $\hat{\eta}$, the \emph{ATE} is evaluated via empirical g-computation over trial units:
         $\hat\tau^{(m)} = \frac{1}{n_e} \sum_{i \in D_e} [ \E\{Y(1) \mid C_i; \theta^{(m)}\} - \E\{Y(0) \mid C_i; \theta^{(m)}\} ]$, with $\theta^{(m)} \sim{\pi(\theta|X_e,X_o, \hat{\eta})}$.
         %\item \emph{Privacy preservation}: Participating sites can share only summary estimates and sandwich matrices $(\hat\phi_s, V_s)$ %without pooling raw patient-level data
